@@ -11,6 +11,19 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Eventify API is running',
+    version: '1.0.0',
+    endpoints: {
+      events: '/api/events',
+      attendees: '/api/attendees',
+      health: '/api/health'
+    }
+  });
+});
+
 // Routes
 app.use('/api/events', eventRoutes);
 app.use('/api/attendees', attendeeRoutes);
