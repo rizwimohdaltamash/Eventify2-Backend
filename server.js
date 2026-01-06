@@ -24,7 +24,7 @@ console.log('🚀 Starting server setup...');
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://eventify2-backend-1.onrender.com'],
+  origin: true, // Allow all origins temporarily for testing
   credentials: true,
 }));
 app.use(express.json());
