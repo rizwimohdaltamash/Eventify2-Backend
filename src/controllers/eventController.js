@@ -1,5 +1,34 @@
 const prisma = require('../lib/prisma');
 
+// Get all events with attendee count and available slots (public endpoint)
+exports.getPublicEvents = async (req, res) => {
+  try {
+    const events = await prisma.event.findMany({
+      include: {
+        _count: {
+          select: { attendees: true }
+        }
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    });
+
+    // Add computed fields for each event
+    const eventsWithAvailability = events.map(event => ({
+      ...event,
+      attendeeCount: event._count.attendees,
+      availableSlots: event.capacity - event._count.attendees,
+      isFull: event._count.attendees >= event.capacity,
+      _count: undefined // Remove internal count object
+    }));
+
+    res.json(eventsWithAvailability);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Get all events
 exports.getAllEvents = async (req, res) => {
   try {
