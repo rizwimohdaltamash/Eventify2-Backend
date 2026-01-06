@@ -24,10 +24,24 @@ console.log('🚀 Starting server setup...');
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'https://eventify2-backend-1.onrender.com'],
   credentials: true,
 }));
 app.use(express.json());
+
+// Health check route
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Eventify Backend API is running',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      events: '/api/events',
+      attendees: '/api/attendees'
+    }
+  });
+});
 
 // Auth Middleware
 const authMiddleware = (req, res, next) => {
