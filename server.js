@@ -164,8 +164,8 @@ app.get('/api/events/public', async (req, res) => {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
       try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        userId = decoded.userId;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.id;
         
         // Get user email
         const user = await prisma.user.findUnique({
@@ -377,7 +377,7 @@ app.post('/api/attendees/book', async (req, res) => {
 app.delete('/api/attendees/cancel/:eventId', authMiddleware, async (req, res) => {
   try {
     const { eventId } = req.params;
-    const userId = req.userId;
+    const userId = req.user.id;
 
     // Get user email
     const user = await prisma.user.findUnique({
